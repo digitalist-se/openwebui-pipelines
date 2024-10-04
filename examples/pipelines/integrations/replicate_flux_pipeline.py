@@ -1,12 +1,4 @@
 """
-title: Replicate Flux Pipeline
-author: Akatsuki.Ryu
-author_url: https://github.com/akatsuki-ryu
-sponsor: Digitalist Open Tech
-date: 2024-10-07
-version: 1.0
-license: MIT
-description: Integrate Replicate Flux API
 requirements: pydantic, replicate
 """
 
@@ -40,24 +32,22 @@ class Pipeline:
         try:
             output = replicate.run(
                 "black-forest-labs/flux-1.1-pro",
-                input={
-                    "prompt": user_message,
-                    "aspect_ratio": "1:1",
-                    "output_format": "png",
-                    "output_quality": 80,
-                    "safety_tolerance": 2,
-                    "prompt_upsampling": False
-                }
+                input={"prompt": user_message}
             )
 
-            # FileOutput オブジェクトを直接使用
-            if output:
-                image_url = str(output)
-                print(f"Generated image URL: {image_url}")
-                message = f"![image]({image_url})\n"
-                return message
-            else:
-                return "No image was generated."
+            # 画像URLを取得
+            image_url = output[0]
+            print(output)
+            return f"URL to the image: {output}"
 
+            
+            # the following code is to convert the image to base64 for showing in the UI 
+            # 画像をダウンロードしてBase64エンコード
+            import requests
+            response = requests.get(output)
+            image_data = BytesIO(response.content)
+            base64_image = base64.b64encode(image_data.getvalue()).decode('utf-8')
+
+            return f"data:image/webp;base64,{base64_image}"
         except Exception as e:
             return f"Error generating image: {str(e)}"
