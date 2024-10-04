@@ -32,8 +32,7 @@ class Pipeline:
                 json={
                     "model_id": model_id,
                     "messages": messages,
-                    "body": body,
-                    "user_message": user_message
+                    "body": body
                 }
             )
 
