@@ -1,4 +1,10 @@
 """
+title: Replicate Flux Pipeline
+author: Akatsuki.Ryu
+date: 2024-10-07
+version: 1.0
+license: MIT
+description: Integrate Replicate Flux API
 requirements: pydantic, replicate
 """
 
