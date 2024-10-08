@@ -44,16 +44,10 @@ class Pipeline:
             # 画像URLを取得
             image_url = output[0]
             print(output)
-            return f"URL to the image: {output}"
-
+            message = "![image](" + output + ")\n"
+            # return f"URL to the image: {output}"
+            return message
             
-            # the following code is to convert the image to base64 for showing in the UI 
-            # 画像をダウンロードしてBase64エンコード
-            import requests
-            response = requests.get(output)
-            image_data = BytesIO(response.content)
-            base64_image = base64.b64encode(image_data.getvalue()).decode('utf-8')
 
-            return f"data:image/webp;base64,{base64_image}"
         except Exception as e:
             return f"Error generating image: {str(e)}"
