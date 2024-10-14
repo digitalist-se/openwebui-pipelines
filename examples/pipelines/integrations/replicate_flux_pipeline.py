@@ -1,6 +1,8 @@
 """
 title: Replicate Flux Pipeline
 author: Akatsuki.Ryu
+author_url: https://github.com/akatsuki-ryu
+sponsor: Digitalist Open Tech
 date: 2024-10-07
 version: 1.0
 license: MIT
