@@ -38,16 +38,24 @@ class Pipeline:
         try:
             output = replicate.run(
                 "black-forest-labs/flux-1.1-pro",
-                input={"prompt": user_message}
+                input={
+                    "prompt": user_message,
+                    "aspect_ratio": "1:1",
+                    "output_format": "png",
+                    "output_quality": 80,
+                    "safety_tolerance": 2,
+                    "prompt_upsampling": False
+                }
             )
 
-            # 画像URLを取得
-            image_url = output[0]
-            print(output)
-            message = "![image](" + output + ")\n"
-            # return f"URL to the image: {output}"
-            return message
-            
+            # FileOutput オブジェクトを直接使用
+            if output:
+                image_url = str(output)
+                print(f"Generated image URL: {image_url}")
+                message = f"![image]({image_url})\n"
+                return message
+            else:
+                return "No image was generated."
 
         except Exception as e:
             return f"Error generating image: {str(e)}"
