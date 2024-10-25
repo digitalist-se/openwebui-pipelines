@@ -7,7 +7,7 @@ date: 2024-10-07
 version: 1.0
 license: MIT
 description: Integrate Replicate Flux API
-requirements: pydantic, replicate
+requirements: pydantic, replicate==0.32.1
 """
 
 from typing import List, Union, Generator, Iterator
@@ -52,9 +52,11 @@ class Pipeline:
 
             # FileOutput オブジェクトを直接使用
             if output:
-                image_url = str(output)
-                print(f"Generated image URL: {image_url}")
-                message = f"![image]({image_url})\n"
+                # image_url = str(output)
+                # print(f"Generated image URL: {image_url}")
+                # from IPython.display import Image
+                print(output)
+                message = f"![image]({output})\n"
                 return message
             else:
                 return "No image was generated."
