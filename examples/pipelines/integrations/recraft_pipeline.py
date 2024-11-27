@@ -29,7 +29,8 @@ class Pipeline:
             "realistic_image",
             "digital_illustration",
             "vector_illustration",
-            "icon"
+            "icon",
+            "digitalist"  # Add custom style to available styles
         ]
         self.style_substyles = {
             "realistic_image": [
@@ -128,7 +129,32 @@ class Pipeline:
             api_key=self.valves.RECRAFT_API_TOKEN
         )
 
-    async def on_shutdown(self):
+    def create_custom_style(self):
+        """Create a custom style using reference images."""
+        try:
+            # Hardcoded reference image path - replace with your actual image path
+            reference_image_path = "/app/./pipelines/reference_image.jpg"
+            
+            style = self.client.post(
+                path='/styles',
+                cast_to=object,
+                options={'headers': {'Content-Type': 'multipart/form-data'}},
+                body={'style': 'digital_illustration'},
+                files={'file': open(reference_image_path, 'rb')},
+            )
+            
+            if style and 'id' in style:
+                print(f"Created custom style with ID: {style['id']}")
+                return style['id']
+            else:
+                print("Failed to create custom style")
+                return None
+                
+        except Exception as e:
+            print(f"Error creating custom style: {str(e)}")
+            return None
+
+    async def on_shutdown(self):    
         print(f"on_shutdown:{__name__}")
 
     def get_style_and_substyle(self, input_text: str) -> tuple[str, str | None]:
@@ -193,17 +219,31 @@ class Pipeline:
             # Select model based on style
             model = 'recraft20b' if selected_style == 'icon' else 'recraftv3'
             
+            # Handle custom style creation if digitalist is requested
+            style_id = None
+            if selected_style == 'digitalist':
+                print("Creating custom style for digitalist")
+                style_id = self.create_custom_style()
+                if not style_id:
+                    print("Falling back to realistic style")
+                    selected_style = 'realistic_image'
+            
             # Prepare request parameters
             params = {
                 'prompt': clean_prompt,
-                'style': selected_style,
                 'size': '1280x1024',
                 'model': model,
             }
+
+            # add style if the style input is not digitalist
+            if selected_style != 'digitalist':
+                params['style'] = selected_style
             
             # Add substyle if specified and valid
             if selected_substyle:
                 params['extra_body'] = {'substyle': selected_substyle}
+            elif selected_style == 'digitalist' and style_id:
+                params['extra_body'] = {'style_id': style_id}
             
             response = self.client.images.generate(**params)
             print(response)
