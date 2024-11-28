@@ -30,7 +30,8 @@ class Pipeline:
             "digital_illustration",
             "vector_illustration",
             "icon",
-            "digitalist"  # Add custom style to available styles
+            "digitalist-color",  # Add custom style to available styles
+            "digitalist-style"
         ]
         self.style_substyles = {
             "realistic_image": [
@@ -221,7 +222,7 @@ class Pipeline:
             
             # Handle custom style creation if digitalist is requested
             style_id = None
-            if selected_style == 'digitalist':
+            if selected_style == 'digitalist-style':
                 print("Creating custom style for digitalist")
                 style_id = self.create_custom_style()
                 if not style_id:
@@ -236,14 +237,34 @@ class Pipeline:
             }
 
             # add style if the style input is not digitalist
-            if selected_style != 'digitalist':
+            if selected_style != 'digitalist-style':
                 params['style'] = selected_style
             
             # Add substyle if specified and valid
             if selected_substyle:
                 params['extra_body'] = {'substyle': selected_substyle}
-            elif selected_style == 'digitalist' and style_id:
-                params['extra_body'] = {'style_id': style_id}
+            elif selected_style == 'digitalist-style' and style_id:
+                params['extra_body'] = {
+                    'style_id': style_id,
+                    # 'controls': {
+                    #     'image_type': 'realistic_image',
+                    #     'colors': [
+                    #         {'rgb': [244, 154, 193]}
+                    #     ]
+                    # }
+                }
+            elif selected_style == 'digitalist-color':
+                params['style'] = 'realistic_image'
+                params['extra_body'] = {
+                    # 'style_id': style_id,
+                    'controls': {
+                        'image_type': 'realistic_image',
+                        'colors': [
+                            {'rgb': [244, 154, 193]}
+                        ]
+                    }
+                }
+
             
             response = self.client.images.generate(**params)
             print(response)
