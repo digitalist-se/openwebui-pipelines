@@ -3,8 +3,8 @@ title: Recraft AI Pipeline
 author: Akatsuki.Ryu
 author_url: https://github.com/akatsuki-ryu
 sponsor: Digitalist Open Tech
-date: 2024-11-26
-version: 1.0
+date: 2025-01-27
+version: 1.01
 license: MIT
 description: Integrate Recraft AI Image Generation API
 requirements: pydantic, openai
