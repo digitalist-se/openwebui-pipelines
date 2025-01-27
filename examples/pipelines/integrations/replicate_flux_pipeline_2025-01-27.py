@@ -3,8 +3,8 @@ title: Replicate Flux Pipeline
 author: Akatsuki.Ryu
 author_url: https://github.com/akatsuki-ryu
 sponsor: Digitalist Open Tech
-date: 2024-10-07
-version: 1.0
+date: 2025-01-27
+version: 1.01
 license: MIT
 description: Integrate Replicate Flux API
 requirements: pydantic, replicate==0.32.1
